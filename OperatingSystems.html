@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operating Systems Masterclass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf7f2;
+    --bg2: #f2ede4;
+    --bg3: #e8e0d0;
+    --surface: #ffffff;
+    --border: #d4c9b5;
+    --accent: #c0392b;
+    --accent2: #8b2fc9;
+    --accent3: #1a6f8a;
+    --ink: #1a1410;
+    --ink2: #3d2f24;
+    --ink3: #6b5744;
+    --ink4: #9a8070;
+    --code-bg: #1e1a16;
+    --code-fg: #e8d5b7;
+    --tag-bg: #fdecea;
+    --tag-fg: #c0392b;
+    --note-bg: #eaf4f8;
+    --note-border: #1a6f8a;
+    --warn-bg: #fdf3e3;
+    --warn-border: #e67e22;
+    --good-bg: #eaf7ed;
+    --good-border: #27ae60;
+    --shadow: 0 4px 24px rgba(30,20,10,0.10);
+    --shadow-sm: 0 2px 8px rgba(30,20,10,0.07);
+    --radius: 12px;
+    --radius-sm: 7px;
+    --transition: 0.3s cubic-bezier(.4,0,.2,1);
+  }
+  [data-theme="dark"] {
+    --bg: #13100d;
+    --bg2: #1a1610;
+    --bg3: #242018;
+    --surface: #1f1b14;
+    --border: #3a3020;
+    --accent: #e05c4a;
+    --accent2: #b57ce8;
+    --accent3: #4dbad4;
+    --ink: #f0e8d8;
+    --ink2: #c8b89a;
+    --ink3: #9a8a70;
+    --ink4: #6a5a48;
+    --code-bg: #0e0c09;
+    --code-fg: #e8d5b7;
+    --tag-bg: #3a1a16;
+    --tag-fg: #e05c4a;
+    --note-bg: #0d2a32;
+    --note-border: #4dbad4;
+    --warn-bg: #2e1f08;
+    --warn-border: #e67e22;
+    --good-bg: #0d2e14;
+    --good-border: #2ecc71;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.75;
+    transition: background var(--transition), color var(--transition);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+    transition: background var(--transition), border-color var(--transition);
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+    flex-shrink: 0;
+  }
+  .logo span { color: var(--ink); }
+
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink3);
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition), color var(--transition);
+    white-space: nowrap;
+  }
+  .nav-links a:hover { background: var(--bg2); color: var(--accent); }
+
+  .theme-btn {
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    color: var(--ink);
+    border-radius: 50px;
+    padding: 7px 16px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all var(--transition);
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .theme-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--bg2) 0%, var(--bg) 60%);
+    border-bottom: 2px solid var(--border);
+    padding: 64px 24px 52px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -80px;
+    width: 340px; height: 340px;
+    background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+    opacity: 0.06;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -80px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, var(--accent3) 0%, transparent 70%);
+    opacity: 0.07;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--tag-fg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 50px;
+    border: 1px solid var(--accent);
+    margin-bottom: 22px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero p {
+    font-size: 1.1rem;
+    color: var(--ink2);
+    max-width: 640px;
+    margin: 0 auto 28px;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+  .hero-badge-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .hero-badge {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 50px;
+    padding: 7px 18px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink2);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── LAYOUT ── */
+  .page-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 40px;
+    align-items: start;
+    padding-top: 44px;
+    padding-bottom: 80px;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: sticky;
+    top: 82px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 18px;
+    box-shadow: var(--shadow-sm);
+    transition: background var(--transition), border-color var(--transition);
+  }
+  .sidebar-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink4);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-nav { list-style: none; }
+  .sidebar-nav li { margin-bottom: 2px; }
+  .sidebar-nav a {
+    display: block;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.83rem;
+    color: var(--ink3);
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition);
+    line-height: 1.35;
+  }
+  .sidebar-nav a:hover { background: var(--bg2); color: var(--accent); }
+  .sidebar-nav .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--ink4);
+    margin-right: 5px;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main-content { min-width: 0; }
+
+  .section-block {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px 38px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow-sm);
+    transition: background var(--transition), border-color var(--transition);
+  }
+
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .section-block h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--border);
+    line-height: 1.2;
+  }
+
+  .section-block h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 28px 0 10px;
+    padding-left: 14px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .section-block h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink2);
+    margin: 20px 0 6px;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .section-block p { color: var(--ink2); margin-bottom: 14px; }
+
+  .section-block ul, .section-block ol {
+    padding-left: 22px;
+    color: var(--ink2);
+    margin-bottom: 14px;
+  }
+  .section-block li { margin-bottom: 5px; }
+
+  strong { color: var(--ink); }
+
+  /* ── CALLOUT BOXES ── */
+  .callout {
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    margin: 18px 0;
+    border-left: 4px solid;
+    font-size: 0.95rem;
+  }
+  .callout-note { background: var(--note-bg); border-color: var(--note-border); color: var(--ink2); }
+  .callout-warn { background: var(--warn-bg); border-color: var(--warn-border); color: var(--ink2); }
+  .callout-good { background: var(--good-bg); border-color: var(--good-border); color: var(--ink2); }
+  .callout-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  .callout-note .callout-title { color: var(--accent3); }
+  .callout-warn .callout-title { color: #e67e22; }
+  .callout-good .callout-title { color: #27ae60; }
+
+  /* ── ANALOGY BOX ── */
+  .analogy {
+    background: linear-gradient(135deg, var(--bg2), var(--bg3));
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    margin: 18px 0;
+    position: relative;
+  }
+  .analogy-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent2);
+    margin-bottom: 6px;
+  }
+  .analogy p { color: var(--ink2); margin: 0; font-style: italic; }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--code-bg);
+    border-radius: var(--radius-sm);
+    padding: 18px 20px;
+    margin: 16px 0;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.65;
+    color: var(--code-fg);
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .code-block .kw { color: #ff7b7b; }
+  .code-block .fn { color: #7ec8e3; }
+  .code-block .cm { color: #7a6f5a; }
+  .code-block .num { color: #f0c080; }
+  .code-block .str { color: #98c873; }
+
+  /* ── TABLES ── */
+  .tbl-wrap { overflow-x: auto; margin: 16px 0; border-radius: var(--radius-sm); border: 1.5px solid var(--border); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+  th {
+    background: var(--bg2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 11px 14px;
+    color: var(--ink3);
+    text-align: left;
+    border-bottom: 1.5px solid var(--border);
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink2);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: var(--bg); }
+
+  /* ── SYLLABUS GRID ── */
+  .syllabus-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 14px;
+    margin: 24px 0;
+  }
+  .syllabus-card {
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    transition: all var(--transition);
+    cursor: default;
+  }
+  .syllabus-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow); }
+  .syl-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  .syl-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  /* ── ALGO STEPS ── */
+  .algo-steps { counter-reset: step; padding: 0; list-style: none; }
+  .algo-steps li {
+    counter-increment: step;
+    position: relative;
+    padding: 10px 14px 10px 48px;
+    margin-bottom: 8px;
+    background: var(--bg2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    color: var(--ink2);
+    font-size: 0.93rem;
+  }
+  .algo-steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--surface);
+    border: 1.5px solid var(--accent);
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  /* ── QUIZ ── */
+  .quiz-intro {
+    background: linear-gradient(135deg, var(--bg2), var(--bg3));
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 28px;
+    border: 1.5px solid var(--border);
+    text-align: center;
+  }
+  .quiz-intro h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .quiz-question {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px 28px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow-sm);
+    transition: border-color var(--transition);
+  }
+  .quiz-question.answered { border-color: var(--accent3); }
+
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    min-width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .q-text {
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .q-diff {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.67rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 50px;
+    padding: 2px 9px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .diff-easy { background: var(--good-bg); color: #27ae60; }
+  .diff-med { background: var(--warn-bg); color: #e67e22; }
+  .diff-hard { background: var(--tag-bg); color: var(--accent); }
+
+  .options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    color: var(--ink2);
+    background: var(--bg);
+    text-align: left;
+    font-family: inherit;
+    line-height: 1.4;
+  }
+  .option:hover { border-color: var(--accent); background: var(--bg2); color: var(--ink); }
+  .option.correct { background: var(--good-bg); border-color: var(--good-border); color: var(--ink); }
+  .option.wrong { background: var(--tag-bg); border-color: var(--accent); color: var(--ink); }
+  .option:disabled { cursor: not-allowed; }
+  .opt-letter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink4);
+    min-width: 20px;
+    padding-top: 1px;
+  }
+  .option.correct .opt-letter { color: #27ae60; }
+  .option.wrong .opt-letter { color: var(--accent); }
+
+  .explanation {
+    display: none;
+    background: var(--note-bg);
+    border: 1px solid var(--note-border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    font-size: 0.88rem;
+    color: var(--ink2);
+    line-height: 1.6;
+    margin-top: 6px;
+  }
+  .explanation.show { display: block; animation: fadeIn 0.3s ease; }
+  .explanation strong { color: var(--accent3); }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .score-bar {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    text-align: center;
+    margin-top: 10px;
+    box-shadow: var(--shadow-sm);
+  }
+  .score-display {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    margin: 10px 0 6px;
+  }
+  .score-msg { color: var(--ink2); font-size: 0.95rem; }
+  .reset-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 28px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 14px;
+    transition: all var(--transition);
+  }
+  .reset-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg2);
+    border-top: 2px solid var(--border);
+    text-align: center;
+    padding: 28px 24px;
+    color: var(--ink4);
+    font-size: 0.85rem;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 800px) {
+    .page-wrap { grid-template-columns: 1fr; padding-top: 28px; }
+    .sidebar { position: static; }
+    .nav-links { display: none; }
+    .section-block { padding: 24px 20px; }
+    .hero { padding: 44px 20px 36px; }
+    .syllabus-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .syllabus-grid { grid-template-columns: 1fr; }
+    .header-inner { gap: 10px; }
+    .logo { font-size: 0.95rem; }
+    .theme-btn span.label { display: none; }
+  }
+
+  /* ── MISC ── */
+  .badge-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--tag-bg);
+    color: var(--tag-fg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 0 2px;
+  }
+  .divider { border: none; border-top: 1.5px solid var(--border); margin: 24px 0; }
+
+  .progress-indicator {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .prog-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: background var(--transition);
+    cursor: pointer;
+  }
+  .prog-dot.done { background: var(--accent3); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo">OS<span> Masterclass</span></div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#intro">Intro</a></li>
+        <li><a href="#s1">Architecture</a></li>
+        <li><a href="#s2">Processes</a></li>
+        <li><a href="#s3">CPU Scheduling</a></li>
+        <li><a href="#s4">Synchronization</a></li>
+        <li><a href="#s5">Deadlocks</a></li>
+        <li><a href="#s6">Memory</a></li>
+        <li><a href="#s7">Virtual Memory</a></li>
+        <li><a href="#s8">File Systems</a></li>
+        <li><a href="#s9">Disk Scheduling</a></li>
+        <li><a href="#quiz">Quiz</a></li>
+      </ul>
+    </nav>
+    <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">
+      <span id="theme-icon">🌙</span>
+      <span class="label" id="theme-label">Dark Mode</span>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+  <div class="hero-tag">🎓 Day 1 · Complete Guide</div>
+  <h1>Welcome to<br><em>Operating Systems</em></h1>
+  <p>You're about to understand the invisible brain that powers every computer, phone, and server on Earth. No prior OS knowledge needed — just curiosity and coffee.</p>
+  <div class="hero-badge-row">
+    <div class="hero-badge">📚 9 Core Topics</div>
+    <div class="hero-badge">🧠 Real-World Analogies</div>
+    <div class="hero-badge">✅ 10 MCQs with Explanations</div>
+    <div class="hero-badge">🌙 Dark Mode Ready</div>
+  </div>
+</section>
+
+<!-- ═══════════════ MAIN LAYOUT ═══════════════ -->
+<div class="page-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-title">Table of Contents</div>
+    <ul class="sidebar-nav">
+      <li><a href="#intro"><span class="num">00</span> Introduction</a></li>
+      <li><a href="#syllabus"><span class="num">—</span> Core Syllabus</a></li>
+      <li><a href="#s1"><span class="num">01</span> OS Architecture</a></li>
+      <li><a href="#s2"><span class="num">02</span> Processes &amp; Threads</a></li>
+      <li><a href="#s3"><span class="num">03</span> CPU Scheduling</a></li>
+      <li><a href="#s4"><span class="num">04</span> Synchronization</a></li>
+      <li><a href="#s5"><span class="num">05</span> Deadlocks</a></li>
+      <li><a href="#s6"><span class="num">06</span> Memory Management</a></li>
+      <li><a href="#s7"><span class="num">07</span> Virtual Memory</a></li>
+      <li><a href="#s8"><span class="num">08</span> File Systems</a></li>
+      <li><a href="#s9"><span class="num">09</span> Disk Scheduling</a></li>
+      <li><a href="#quiz"><span class="num">✓</span> Knowledge Quiz</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <!-- ══ INTRO ══ -->
+    <section id="intro" class="section-block">
+      <div class="section-num">Introduction</div>
+      <h2>👋 Hello, Future OS Expert!</h2>
+      <p>Imagine you just walked into a bustling <strong>restaurant kitchen</strong>. There are chefs (programs), ovens (hardware), waiters running around, ingredients in storage... Someone has to manage all of this chaos — deciding which chef uses the oven next, making sure no one crashes into each other, and keeping the pantry organized.</p>
+      <p>That <em>someone</em> is the <strong>Operating System (OS)</strong>.</p>
+      <div class="analogy">
+        <div class="analogy-label">🍳 Real-World Analogy</div>
+        <p>The OS is like the <strong>head chef / kitchen manager</strong> of a restaurant. Programs are the recipes. The CPU is the stove. RAM is the counter space. The disk is the pantry. The OS decides who cooks, when, and how much counter space they get.</p>
+      </div>
+      <h3>What Exactly Is an Operating System?</h3>
+      <p>An OS is a <strong>system software</strong> that sits between your hardware (the physical machine) and your applications (Chrome, Word, games). It provides three key services:</p>
+      <ul>
+        <li><strong>Resource Management</strong> — shares CPU, RAM, and disk among many programs</li>
+        <li><strong>Abstraction</strong> — hides messy hardware details behind clean, simple interfaces</li>
+        <li><strong>Protection</strong> — makes sure one program can't crash or spy on another</li>
+      </ul>
+      <div class="callout callout-note">
+        <div class="callout-title">📌 Key Examples</div>
+        Windows, macOS, Linux, Android, iOS — these are all Operating Systems. They're different in style but share the same core job.
+      </div>
+    </section>
+
+    <!-- ══ SYLLABUS ══ -->
+    <section id="syllabus" class="section-block">
+      <div class="section-num">Core Master Syllabus</div>
+      <h2>🗺️ What We'll Cover Today</h2>
+      <p>Here's every topic we'll master in this session. By the end, you'll have a solid, complete understanding of how operating systems actually work.</p>
+      <div class="syllabus-grid">
+        <div class="syllabus-card"><div class="syl-num">01</div><div class="syl-title">System Calls &amp; OS Architecture</div></div>
+        <div class="syllabus-card"><div class="syl-num">02</div><div class="syl-title">Process Concept, PCB &amp; Threads</div></div>
+        <div class="syllabus-card"><div class="syl-num">03</div><div class="syl-title">CPU Scheduling Algorithms</div></div>
+        <div class="syllabus-card"><div class="syl-num">04</div><div class="syl-title">Process Synchronization</div></div>
+        <div class="syllabus-card"><div class="syl-num">05</div><div class="syl-title">Deadlocks</div></div>
+        <div class="syllabus-card"><div class="syl-num">06</div><div class="syl-title">Memory Management</div></div>
+        <div class="syllabus-card"><div class="syl-num">07</div><div class="syl-title">Virtual Memory</div></div>
+        <div class="syllabus-card"><div class="syl-num">08</div><div class="syl-title">File Systems &amp; Directories</div></div>
+        <div class="syllabus-card"><div class="syl-num">09</div><div class="syl-title">Disk Scheduling Algorithms</div></div>
+      </div>
+    </section>
+
+    <!-- ══ S1: OS ARCHITECTURE ══ -->
+    <section id="s1" class="section-block">
+      <div class="section-num">Topic 01</div>
+      <h2>🏗️ OS Architecture &amp; System Calls</h2>
+
+      <h3>Layers of a Computer System</h3>
+      <p>A computer system is organized in layers, like an onion. The hardware is at the center, and user applications are on the outside:</p>
+      <div class="code-block">
+<span class="cm">┌─────────────────────────────────┐</span>
+<span class="str">│      User Applications          │</span>  ← Chrome, Word, your code
+<span class="cm">├─────────────────────────────────┤</span>
+<span class="fn">│    System Libraries / APIs      │</span>  ← printf(), malloc()
+<span class="cm">├─────────────────────────────────┤</span>
+<span class="kw">│      Operating System Kernel    │</span>  ← The heart of the OS
+<span class="cm">├─────────────────────────────────┤</span>
+<span class="num">│      Hardware                   │</span>  ← CPU, RAM, Disk, GPU
+<span class="cm">└─────────────────────────────────┘</span>
+      </div>
+
+      <h3>Kernel vs. User Mode</h3>
+      <p>The CPU operates in two privilege modes:</p>
+      <ul>
+        <li><strong>Kernel Mode (Privileged):</strong> The OS runs here. It can access anything — memory, hardware, all instructions. Full power.</li>
+        <li><strong>User Mode (Restricted):</strong> Your applications run here. They cannot directly touch hardware. They must "ask" the OS politely.</li>
+      </ul>
+      <div class="analogy">
+        <div class="analogy-label">🏦 Analogy</div>
+        <p>Think of a bank. Customers (user mode) can't go into the vault themselves. They have to ask a teller (the OS, running in kernel mode) to do it for them. The teller verifies the request and acts on it safely.</p>
+      </div>
+
+      <h3>System Calls — The Bridge</h3>
+      <p>A <strong>system call</strong> is how a user program requests a service from the OS kernel. It's the only legal gateway from user mode to kernel mode.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Category</th><th>Example System Calls</th><th>What They Do</th></tr></thead>
+          <tbody>
+            <tr><td>Process Control</td><td><code>fork(), exec(), exit()</code></td><td>Create, run, terminate processes</td></tr>
+            <tr><td>File Management</td><td><code>open(), read(), write(), close()</code></td><td>Work with files</td></tr>
+            <tr><td>Device Management</td><td><code>ioctl(), read(), write()</code></td><td>Communicate with hardware</td></tr>
+            <tr><td>Information</td><td><code>getpid(), time()</code></td><td>Get system info</td></tr>
+            <tr><td>Communication</td><td><code>pipe(), socket()</code></td><td>Talk between processes</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Types of OS Architectures</h3>
+      <ul>
+        <li><strong>Monolithic Kernel:</strong> Everything (file system, drivers, scheduler) runs in one big kernel space. Fast, but risky — a bug can crash everything. <em>Example: Linux.</em></li>
+        <li><strong>Microkernel:</strong> Only the absolute minimum (IPC, basic scheduling) runs in kernel mode. Everything else runs in user space. More stable, but slower due to context switches. <em>Example: Minix.</em></li>
+        <li><strong>Hybrid Kernel:</strong> Mix of both. <em>Example: Windows NT, macOS XNU.</em></li>
+        <li><strong>Exokernel:</strong> Gives hardware access directly to applications — extremely minimal abstraction. Research-oriented.</li>
+      </ul>
+    </section>
+
+    <!-- ══ S2: PROCESSES ══ -->
+    <section id="s2" class="section-block">
+      <div class="section-num">Topic 02</div>
+      <h2>⚙️ Processes, PCB &amp; Threads</h2>
+
+      <h3>What Is a Process?</h3>
+      <p>A <strong>process</strong> is a <em>program in execution</em>. A program is a passive file sitting on your disk (like a recipe in a book). A process is that program actively running, using CPU and memory (like a chef actually cooking that recipe).</p>
+      <p>Every process has its own:</p>
+      <ul>
+        <li><strong>Code segment:</strong> The actual instructions</li>
+        <li><strong>Data segment:</strong> Global variables</li>
+        <li><strong>Heap:</strong> Dynamic memory (malloc'd data)</li>
+        <li><strong>Stack:</strong> Function calls, local variables</li>
+      </ul>
+
+      <h3>Process States — The Life of a Process</h3>
+      <div class="code-block">
+<span class="cm">         ┌──────────────────────────────────────────────────┐</span>
+<span class="cm">         │                                                  │</span>
+<span class="str">  New ──→</span><span class="fn"> Ready </span><span class="cm">──→ (Scheduler picks it) ──→</span><span class="kw"> Running </span>
+<span class="cm">         ↑                                      │         </span>
+<span class="cm">         │              (I/O done)               │         </span>
+<span class="fn">       Waiting </span><span class="cm">←──────────────────────── (Needs I/O)     </span>
+<span class="cm">                                                │          </span>
+<span class="num">                                           Terminated </span>
+      </div>
+      <ul>
+        <li><strong>New:</strong> Process is being created</li>
+        <li><strong>Ready:</strong> Waiting for CPU time</li>
+        <li><strong>Running:</strong> Currently executing on CPU</li>
+        <li><strong>Waiting (Blocked):</strong> Waiting for I/O or an event</li>
+        <li><strong>Terminated:</strong> Finished execution</li>
+      </ul>
+
+      <h3>Process Control Block (PCB) — The Process's ID Card</h3>
+      <p>The OS keeps a data structure for each process called the <strong>PCB</strong>. Think of it as the process's official government file.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>PCB Field</th><th>What It Stores</th></tr></thead>
+          <tbody>
+            <tr><td>Process ID (PID)</td><td>Unique identifier for the process</td></tr>
+            <tr><td>Process State</td><td>New, Ready, Running, Waiting, Terminated</td></tr>
+            <tr><td>Program Counter (PC)</td><td>Address of the next instruction to execute</td></tr>
+            <tr><td>CPU Registers</td><td>All register values — saved during context switch</td></tr>
+            <tr><td>Memory Limits</td><td>Base and limit registers for memory boundaries</td></tr>
+            <tr><td>Open Files</td><td>List of files currently open</td></tr>
+            <tr><td>Scheduling Info</td><td>Priority, burst time, arrival time</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Context Switching</h3>
+      <p>When the OS switches the CPU from one process to another, it must <strong>save the current process's PCB</strong> and <strong>load the next process's PCB</strong>. This is called a <strong>context switch</strong>. It has overhead — the CPU does zero useful work during a context switch.</p>
+
+      <h3>Threads — Lightweight Processes</h3>
+      <p>A <strong>thread</strong> is a unit of execution <em>within</em> a process. A single process can have multiple threads, and they all share the process's memory (code, data, heap). Each thread has its own stack and program counter.</p>
+      <div class="analogy">
+        <div class="analogy-label">🍽️ Analogy</div>
+        <p>A process is a restaurant. Threads are the individual waiters. They all share the same kitchen (memory), menu (code), and customer list (data), but each waiter independently takes orders (has their own stack/PC).</p>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Feature</th><th>Process</th><th>Thread</th></tr></thead>
+          <tbody>
+            <tr><td>Memory</td><td>Separate address space</td><td>Shared with parent process</td></tr>
+            <tr><td>Creation overhead</td><td>High</td><td>Low</td></tr>
+            <tr><td>Communication</td><td>Complex (IPC needed)</td><td>Easy (shared memory)</td></tr>
+            <tr><td>Crash impact</td><td>Isolated</td><td>Can crash whole process</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout callout-warn">
+        <div class="callout-title">⚠️ Important</div>
+        Threads are faster to create and communicate, but they're more dangerous — a bug in one thread can corrupt shared memory for all other threads in the same process.
+      </div>
+    </section>
+
+    <!-- ══ S3: CPU SCHEDULING ══ -->
+    <section id="s3" class="section-block">
+      <div class="section-num">Topic 03</div>
+      <h2>⏱️ CPU Scheduling Algorithms</h2>
+      <p>The <strong>CPU Scheduler</strong> decides which process from the Ready Queue gets the CPU next. This is one of the most critical OS decisions — bad scheduling = slow, unresponsive system.</p>
+
+      <h3>Key Terms First</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>Burst Time (BT)</td><td>Time the process needs on the CPU</td></tr>
+            <tr><td>Arrival Time (AT)</td><td>When the process enters the ready queue</td></tr>
+            <tr><td>Completion Time (CT)</td><td>When the process finishes</td></tr>
+            <tr><td>Turnaround Time (TAT)</td><td>CT − AT (total time in system)</td></tr>
+            <tr><td>Waiting Time (WT)</td><td>TAT − BT (time spent waiting)</td></tr>
+            <tr><td>Response Time</td><td>Time from arrival to first CPU access</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>1. FCFS — First Come, First Served</h3>
+      <p>The simplest algorithm. Whoever arrives first gets the CPU first. <strong>Non-preemptive</strong> — once a process starts, it runs to completion.</p>
+      <div class="callout callout-warn">
+        <div class="callout-title">⚠️ Convoy Effect</div>
+        If a long process arrives first, all short processes wait a long time. This is called the <strong>Convoy Effect</strong> — the biggest problem with FCFS.
+      </div>
+
+      <h3>2. SJF — Shortest Job First</h3>
+      <p>The process with the <strong>shortest burst time</strong> goes next. This minimizes average waiting time — it's actually <em>optimal</em> for average WT. But it can cause <strong>starvation</strong> — long processes may never run if short ones keep arriving. <strong>Non-preemptive.</strong></p>
+
+      <h3>3. SRTF — Shortest Remaining Time First</h3>
+      <p>The <strong>preemptive version of SJF</strong>. If a new process arrives with a shorter remaining burst than the current process, the current process is preempted (kicked off the CPU). Most optimal for average WT, but complex to implement.</p>
+
+      <h3>4. Round Robin (RR)</h3>
+      <p>Each process gets a fixed <strong>time quantum (q)</strong>. After q units, if not done, it's preempted and sent to the back of the ready queue. This is the most widely used algorithm in real systems because it's fair and gives good response time.</p>
+      <div class="callout callout-note">
+        <div class="callout-title">📌 Choosing the Right Quantum</div>
+        Too small a quantum → too many context switches, high overhead. Too large → degrades to FCFS. The art is in finding the sweet spot.
+      </div>
+
+      <h3>5. Priority Scheduling</h3>
+      <p>Each process has a <strong>priority number</strong>. The CPU always goes to the highest-priority process. Can be preemptive or non-preemptive.</p>
+      <p><strong>Problem: Starvation.</strong> Low-priority processes may never run. <strong>Solution: Aging</strong> — gradually increase the priority of waiting processes over time.</p>
+
+      <h3>Scheduling Algorithm Comparison</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Algorithm</th><th>Type</th><th>Best For</th><th>Main Problem</th></tr></thead>
+          <tbody>
+            <tr><td>FCFS</td><td>Non-preemptive</td><td>Simple batch systems</td><td>Convoy Effect</td></tr>
+            <tr><td>SJF</td><td>Non-preemptive</td><td>Batch, known burst times</td><td>Starvation</td></tr>
+            <tr><td>SRTF</td><td>Preemptive</td><td>Min. avg. waiting time</td><td>Starvation, overhead</td></tr>
+            <tr><td>Round Robin</td><td>Preemptive</td><td>Time-sharing, interactive</td><td>High context switches</td></tr>
+            <tr><td>Priority</td><td>Both</td><td>Real-time systems</td><td>Starvation</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══ S4: SYNCHRONIZATION ══ -->
+    <section id="s4" class="section-block">
+      <div class="section-num">Topic 04</div>
+      <h2>🔒 Process Synchronization</h2>
+
+      <h3>The Problem: Race Conditions</h3>
+      <p>When multiple processes/threads access shared data concurrently, and the outcome depends on the exact timing of execution, we have a <strong>race condition</strong>. The result is unpredictable and often wrong.</p>
+      <div class="analogy">
+        <div class="analogy-label">🏦 Analogy</div>
+        <p>Imagine two people simultaneously withdrawing ₹1000 from a bank account that has only ₹1000. If both check the balance at the same time and both see ₹1000, both withdraw successfully — leaving the account at −₹1000. That's a race condition!</p>
+      </div>
+
+      <h3>The Critical Section Problem</h3>
+      <p>A <strong>Critical Section</strong> is the piece of code that accesses shared resources. At any given time, only <strong>one process</strong> should be in its critical section.</p>
+      <p>Any solution to the critical section problem must satisfy:</p>
+      <ul>
+        <li><strong>Mutual Exclusion:</strong> Only one process at a time in the critical section</li>
+        <li><strong>Progress:</strong> If no one is in the critical section, a waiting process must get in eventually — no unnecessary blocking</li>
+        <li><strong>Bounded Waiting:</strong> A process must be guaranteed to enter the critical section in a finite time — no starvation</li>
+      </ul>
+
+      <h3>Mutex (Mutual Exclusion Lock)</h3>
+      <p>A <strong>mutex</strong> is a simple locking mechanism. A process <strong>acquires</strong> the lock before the critical section and <strong>releases</strong> it after. Only the owner can release a mutex.</p>
+      <div class="code-block">
+<span class="kw">mutex</span>.lock();        <span class="cm">// Acquire lock — waits if locked</span>
+  <span class="cm">// ← Critical Section →</span>
+  shared_counter++;
+<span class="kw">mutex</span>.unlock();      <span class="cm">// Release lock</span>
+      </div>
+
+      <h3>Semaphores — The Traffic Light</h3>
+      <p>A <strong>semaphore</strong> is a more powerful synchronization tool. It's an integer variable with two atomic operations:</p>
+      <ul>
+        <li><strong>wait(S)</strong> / P(S): Decrements S. If S becomes negative, the process sleeps.</li>
+        <li><strong>signal(S)</strong> / V(S): Increments S. If any process is sleeping, wake one up.</li>
+      </ul>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Type</th><th>Initial Value</th><th>Use Case</th></tr></thead>
+          <tbody>
+            <tr><td>Binary Semaphore</td><td>0 or 1</td><td>Works like a mutex</td></tr>
+            <tr><td>Counting Semaphore</td><td>N (any non-negative)</td><td>Manage a pool of N resources (e.g., N printers)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Classic Synchronization Problems</h3>
+      <ul>
+        <li><strong>Producer-Consumer Problem:</strong> Producer adds to a buffer; Consumer removes from it. Must synchronize so producer doesn't overfill and consumer doesn't read from empty buffer.</li>
+        <li><strong>Dining Philosophers Problem:</strong> 5 philosophers, 5 chopsticks, must pick up 2 adjacent chopsticks to eat. Demonstrates deadlock and resource allocation challenges.</li>
+        <li><strong>Readers-Writers Problem:</strong> Multiple readers can read simultaneously, but a writer needs exclusive access. Balancing fairness is the challenge.</li>
+      </ul>
+    </section>
+
+    <!-- ══ S5: DEADLOCKS ══ -->
+    <section id="s5" class="section-block">
+      <div class="section-num">Topic 05</div>
+      <h2>☠️ Deadlocks</h2>
+
+      <h3>What Is a Deadlock?</h3>
+      <p>A <strong>deadlock</strong> is a state where a set of processes are <em>stuck forever</em>, each waiting for a resource held by another process in the same set. Nobody can move. Nothing gets done.</p>
+      <div class="analogy">
+        <div class="analogy-label">🚗 Analogy</div>
+        <p>Imagine a single-lane bridge. Car A is on the bridge going east, and Car B is on it going west. Neither can move forward, neither wants to back up. They're deadlocked.</p>
+      </div>
+
+      <h3>Coffman's 4 Necessary Conditions</h3>
+      <p>A deadlock can occur <em>only if all four</em> of these conditions hold simultaneously:</p>
+      <ol>
+        <li><strong>Mutual Exclusion:</strong> Resources are non-shareable (only one process can use a resource at a time)</li>
+        <li><strong>Hold and Wait:</strong> A process holds at least one resource and is waiting to acquire others held by other processes</li>
+        <li><strong>No Preemption:</strong> Resources cannot be forcibly taken away — only released voluntarily</li>
+        <li><strong>Circular Wait:</strong> P1 waits for P2, P2 waits for P3, P3 waits for P1 — a cycle!</li>
+      </ol>
+      <div class="callout callout-note">
+        <div class="callout-title">📌 Memory Trick</div>
+        <strong>M-H-N-C</strong> → "My Hamster Needs Cheese" → Mutual exclusion, Hold &amp; wait, No preemption, Circular wait.
+      </div>
+
+      <h3>Deadlock Prevention</h3>
+      <p>Prevent deadlock by <strong>eliminating at least one of the four conditions</strong>:</p>
+      <ul>
+        <li>Deny Mutual Exclusion — not always possible (printers truly need exclusion)</li>
+        <li>Deny Hold &amp; Wait — require a process to request ALL resources at once before starting</li>
+        <li>Allow Preemption — if a process can't get what it needs, take back its current resources</li>
+        <li>Deny Circular Wait — impose an ordering on all resource types; processes must request in order</li>
+      </ul>
+
+      <h3>Deadlock Avoidance — The Banker's Algorithm</h3>
+      <p>Rather than preventing, we <em>avoid</em> deadlock by only granting resource requests if the resulting state is <strong>safe</strong>.</p>
+      <p>A <strong>safe state</strong> means there exists a sequence (called a safe sequence) in which every process can get its maximum resources and finish. If no such sequence exists, it's an <strong>unsafe state</strong>.</p>
+      <p>The <strong>Banker's Algorithm</strong> (by Dijkstra) checks safety before every allocation:</p>
+      <ul class="algo-steps">
+        <li>Let <strong>Need[i] = Max[i] − Allocation[i]</strong> for each process</li>
+        <li>Set <strong>Work = Available</strong> and <strong>Finish[i] = false</strong> for all i</li>
+        <li>Find an i such that <code>Finish[i] == false</code> AND <code>Need[i] ≤ Work</code></li>
+        <li>If found: <code>Work = Work + Allocation[i]</code>, <code>Finish[i] = true</code>, go to step 3</li>
+        <li>If all Finish[i] == true → <strong>Safe State!</strong> Otherwise → <strong>Unsafe State.</strong></li>
+      </ul>
+
+      <h3>Deadlock Detection &amp; Recovery</h3>
+      <p>If we don't prevent or avoid deadlocks, we need to <strong>detect</strong> them and <strong>recover</strong>:</p>
+      <ul>
+        <li><strong>Detection:</strong> Use a Resource Allocation Graph (RAG). A cycle in the RAG with single-instance resources means deadlock.</li>
+        <li><strong>Recovery Options:</strong>
+          <ul>
+            <li>Terminate one or all deadlocked processes (lose their work)</li>
+            <li>Preempt resources from a process (and roll it back)</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ══ S6: MEMORY MANAGEMENT ══ -->
+    <section id="s6" class="section-block">
+      <div class="section-num">Topic 06</div>
+      <h2>🧩 Memory Management</h2>
+      <p>The OS must allocate RAM to processes efficiently while protecting each process's memory from others.</p>
+
+      <h3>Contiguous Memory Allocation</h3>
+      <p>Early systems gave each process one <em>contiguous</em> (unbroken) block of physical memory.</p>
+      <p><strong>Fixed Partitioning:</strong> RAM is divided into fixed-size partitions. Simple, but causes <strong>internal fragmentation</strong> — unused space inside a partition.</p>
+      <p><strong>Dynamic Partitioning:</strong> Partitions sized exactly to the process. Causes <strong>external fragmentation</strong> — free memory scattered in small chunks that can't be used. Solved by <strong>compaction</strong> (shuffling processes together).</p>
+
+      <h3>Paging — The Great Solution</h3>
+      <p><strong>Paging</strong> breaks physical memory into fixed-size <strong>frames</strong> and logical memory into same-size <strong>pages</strong>. A process's pages can be scattered across any available frames — no need for contiguous allocation!</p>
+      <div class="analogy">
+        <div class="analogy-label">📚 Analogy</div>
+        <p>Imagine your notes are in loose pages. You can store page 1 in drawer A, page 2 in drawer C, page 3 in drawer B. As long as you have a table of contents (page table) telling you where each page is, you can reconstruct the full notes.</p>
+      </div>
+      <p>A <strong>Page Table</strong> maps logical page numbers to physical frame numbers. The CPU uses a logical address <code>(page number, offset)</code> which the Memory Management Unit (MMU) translates to a physical address.</p>
+      <div class="callout callout-good">
+        <div class="callout-title">✅ Advantage</div>
+        Paging eliminates <strong>external fragmentation</strong>! Pages fit perfectly into frames. Only minor internal fragmentation in the last page of a process.
+      </div>
+      <p><strong>TLB (Translation Lookaside Buffer):</strong> A tiny, super-fast cache for recent page table entries. Instead of going to the page table in RAM every time (slow!), we first check the TLB. A TLB <em>hit</em> speeds up address translation dramatically.</p>
+
+      <h3>Segmentation</h3>
+      <p><strong>Segmentation</strong> divides a process's memory into <em>variable-size</em> <strong>segments</strong> based on logical divisions: code segment, data segment, stack segment, heap segment. Each segment has a base address and a limit.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Feature</th><th>Paging</th><th>Segmentation</th></tr></thead>
+          <tbody>
+            <tr><td>Division basis</td><td>Fixed-size pages</td><td>Logical units (code, data, stack)</td></tr>
+            <tr><td>External fragmentation</td><td>None</td><td>Yes (variable sizes)</td></tr>
+            <tr><td>Internal fragmentation</td><td>Yes (last page)</td><td>None</td></tr>
+            <tr><td>User visibility</td><td>Hidden</td><td>Visible to programmer</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Modern systems often use <strong>Segmentation with Paging</strong> (e.g., x86) — each segment is divided into pages, combining the benefits of both.</p>
+    </section>
+
+    <!-- ══ S7: VIRTUAL MEMORY ══ -->
+    <section id="s7" class="section-block">
+      <div class="section-num">Topic 07</div>
+      <h2>💫 Virtual Memory</h2>
+      <p><strong>Virtual Memory</strong> is one of the cleverest ideas in computer science. It gives each process the illusion that it has a huge, private address space — even if physical RAM is small.</p>
+      <div class="analogy">
+        <div class="analogy-label">📖 Analogy</div>
+        <p>Imagine you're studying from a 1000-page textbook but your desk only fits 10 pages at a time. You keep swapping pages: you put the pages you're done with back in the book and bring out the new ones you need. Virtual memory works exactly like this — your desk is RAM, the book is disk.</p>
+      </div>
+
+      <h3>Demand Paging</h3>
+      <p>With <strong>demand paging</strong>, pages are loaded into RAM <em>only when needed</em> (on demand), not all at once. When a process accesses a page that isn't in RAM, a <strong>page fault</strong> occurs:</p>
+      <ul class="algo-steps">
+        <li>CPU accesses an address; MMU checks the page table</li>
+        <li>Page table shows the page is <em>not present</em> (valid bit = 0) → <strong>Page Fault!</strong></li>
+        <li>OS traps to the page fault handler</li>
+        <li>OS finds a free frame (or evicts one) and loads the page from disk</li>
+        <li>Update the page table with the new frame number, valid bit = 1</li>
+        <li>Restart the faulting instruction</li>
+      </ul>
+
+      <h3>Page Replacement Algorithms</h3>
+      <p>When RAM is full and a page fault occurs, the OS must choose a <strong>victim page</strong> to evict (write back to disk). The choice matters — bad choices cause excessive page faults (<strong>thrashing</strong>).</p>
+
+      <h4>1. FIFO — First In, First Out</h4>
+      <p>Evict the page that has been in memory the <em>longest</em>. Simple, but not always smart — an old page might still be frequently used. FIFO can suffer from <strong>Belady's Anomaly</strong>: adding more frames can sometimes cause <em>more</em> page faults!</p>
+
+      <h4>2. LRU — Least Recently Used</h4>
+      <p>Evict the page that was <em>least recently accessed</em>. This is based on locality of reference — if a page hasn't been used in a while, it probably won't be needed soon. LRU is generally excellent but expensive to implement perfectly (need timestamps).</p>
+
+      <h4>3. Optimal (OPT / Bélády's Algorithm)</h4>
+      <p>Evict the page that won't be used for the <em>longest time in the future</em>. This is theoretically the best possible algorithm — guaranteed minimum page faults. But it's <strong>impossible to implement in practice</strong> (we can't predict the future). It's used as a benchmark to compare other algorithms.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Algorithm</th><th>Evicts</th><th>Page Faults</th><th>Practical?</th></tr></thead>
+          <tbody>
+            <tr><td>FIFO</td><td>Oldest loaded page</td><td>High</td><td>Yes (easy)</td></tr>
+            <tr><td>LRU</td><td>Least recently used</td><td>Low</td><td>Yes (with approximation)</td></tr>
+            <tr><td>Optimal</td><td>Not used longest in future</td><td>Minimum possible</td><td>No (theoretical)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Thrashing</h3>
+      <p><strong>Thrashing</strong> occurs when a process spends more time page-faulting (swapping pages in and out) than actually executing. The CPU utilization drops sharply. Solution: reduce the degree of multiprogramming (run fewer processes) or increase RAM.</p>
+    </section>
+
+    <!-- ══ S8: FILE SYSTEMS ══ -->
+    <section id="s8" class="section-block">
+      <div class="section-num">Topic 08</div>
+      <h2>📁 File Systems &amp; Directory Structure</h2>
+      <p>The <strong>file system</strong> is how the OS organizes data on persistent storage (disk, SSD). It provides a friendly abstraction (files and folders) over raw disk blocks.</p>
+
+      <h3>What Is a File?</h3>
+      <p>A file is a named collection of related data. From the OS perspective, it's a sequence of bytes. The OS manages files through metadata stored in a structure called an <strong>inode</strong> (index node).</p>
+      <p><strong>Inode contains:</strong> file size, owner, permissions, timestamps, and pointers to the actual data blocks on disk. It does <em>not</em> contain the file name (that lives in the directory).</p>
+
+      <h3>Directory Structures</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Structure</th><th>Description</th><th>Limitation</th></tr></thead>
+          <tbody>
+            <tr><td>Single-Level</td><td>All files in one directory</td><td>No organization, naming conflicts</td></tr>
+            <tr><td>Two-Level</td><td>One directory per user</td><td>No sharing between users</td></tr>
+            <tr><td>Tree-Structured</td><td>Hierarchical, like Unix/Windows</td><td>Hard to share files across branches</td></tr>
+            <tr><td>Acyclic Graph</td><td>Allows shared subdirectories (symlinks)</td><td>Dangling pointers on deletion</td></tr>
+            <tr><td>General Graph</td><td>Allows cycles</td><td>Need garbage collection</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>File Allocation Methods</h3>
+      <p>How are file blocks arranged on disk?</p>
+      <ul>
+        <li><strong>Contiguous Allocation:</strong> All blocks of a file stored sequentially. Fast sequential read, but causes external fragmentation and can't easily grow files.</li>
+        <li><strong>Linked Allocation:</strong> Each block has a pointer to the next. No fragmentation, files can grow easily. But slow for random access (must follow the chain), and a broken pointer corrupts everything.</li>
+        <li><strong>Indexed Allocation:</strong> A special <em>index block</em> holds pointers to all the file's blocks. Good random access, no external fragmentation. Used by Unix inodes with direct/indirect block pointers.</li>
+      </ul>
+
+      <h3>File System Examples</h3>
+      <ul>
+        <li><strong>FAT (File Allocation Table):</strong> Old Windows, USB drives. Simple linked allocation using a table.</li>
+        <li><strong>NTFS:</strong> Modern Windows. Journaling, permissions, large file support.</li>
+        <li><strong>ext4:</strong> Default Linux filesystem. Indexed allocation, journaling, extents.</li>
+      </ul>
+    </section>
+
+    <!-- ══ S9: DISK SCHEDULING ══ -->
+    <section id="s9" class="section-block">
+      <div class="section-num">Topic 09</div>
+      <h2>💿 Disk Scheduling Algorithms</h2>
+      <p>Traditional Hard Disk Drives (HDDs) have a read/write <strong>head</strong> that moves across spinning platters. The time to access data = <strong>Seek Time</strong> (moving head to right track) + Rotational Latency + Transfer Time. Seek time dominates, so we minimize total head movement.</p>
+
+      <h3>FCFS — First Come, First Served</h3>
+      <p>Process requests in arrival order. Fair, but head movement can be huge. Good for light disk loads.</p>
+
+      <h3>SSTF — Shortest Seek Time First</h3>
+      <p>Always service the request closest to the current head position. Minimizes total movement better than FCFS. Problem: <strong>starvation</strong> — requests far from the head may never be served.</p>
+
+      <h3>SCAN (Elevator Algorithm)</h3>
+      <p>Head moves in one direction, servicing all requests along the way, then reverses. Like an elevator — goes up servicing floors, then comes back down. No starvation. Slight unfairness to requests just behind the head after a reversal.</p>
+
+      <h3>C-SCAN (Circular SCAN)</h3>
+      <p>Like SCAN, but after reaching one end, the head immediately jumps back to the beginning without servicing on the way back. Provides more uniform wait times. <strong>C-LOOK</strong> is the practical version — head only goes as far as the last request in each direction, not to the physical end of disk.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Algorithm</th><th>Strategy</th><th>Starvation?</th><th>Best When</th></tr></thead>
+          <tbody>
+            <tr><td>FCFS</td><td>Arrival order</td><td>No</td><td>Light load</td></tr>
+            <tr><td>SSTF</td><td>Nearest first</td><td>Yes</td><td>Burst performance</td></tr>
+            <tr><td>SCAN</td><td>Elevator</td><td>No</td><td>Heavy, uniform load</td></tr>
+            <tr><td>C-SCAN</td><td>One-direction elevator</td><td>No</td><td>Uniform response time</td></tr>
+            <tr><td>C-LOOK</td><td>Practical C-SCAN</td><td>No</td><td>Most real systems</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout callout-good">
+        <div class="callout-title">✅ Note on SSDs</div>
+        SSDs have no moving parts, so seek time is negligible. Disk scheduling algorithms are mostly irrelevant for SSDs — the OS uses simpler queuing for them.
+      </div>
+    </section>
+
+    <!-- ══ QUIZ ══ -->
+    <section id="quiz" class="section-block">
+      <div class="section-num">Knowledge Check</div>
+      <h2>🧠 Test Your Knowledge — 10 MCQs</h2>
+
+      <div class="quiz-intro">
+        <h3>Ready to Prove Your Skills?</h3>
+        <p>10 carefully designed questions spanning everything you've just learned — from basic to advanced. Click an option to see the detailed explanation. <strong>Good luck!</strong></p>
+        <div id="score-display-top" style="font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--ink3);margin-top:10px;">Score: <span id="live-score">0</span> / <span id="live-total">0</span> answered</div>
+      </div>
+
+      <div id="quiz-container"></div>
+
+      <div class="score-bar" id="final-score" style="display:none;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--ink4);text-transform:uppercase;letter-spacing:0.1em;">Your Final Score</div>
+        <div class="score-display" id="score-fraction">0/10</div>
+        <div class="score-msg" id="score-message"></div>
+        <button class="reset-btn" onclick="resetQuiz()">🔄 Try Again</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <p>🎓 Operating Systems Masterclass &nbsp;·&nbsp; Designed for curious minds on Day 1</p>
+  <p style="margin-top:6px;font-size:0.78rem;">Everything you need to go from zero to confident. Keep learning — you're doing great! 🚀</p>
+</footer>
+
+<script>
+  // ── THEME TOGGLE ──
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('theme-icon').textContent = isDark ? '🌙' : '☀️';
+    document.getElementById('theme-label').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+  }
+
+  // ── QUIZ DATA ──
+  const questions = [
+    {
+      text: "Which of the following is NOT a necessary condition for a deadlock to occur?",
+      diff: "easy",
+      options: [
+        "Mutual Exclusion",
+        "Hold and Wait",
+        "Preemption",
+        "Circular Wait"
+      ],
+      correct: 2,
+      explanation: "The correct answer is <strong>Preemption</strong>. Deadlock requires <em>No Preemption</em> (resources cannot be forcibly taken). The four necessary conditions are Mutual Exclusion, Hold and Wait, <em>No</em> Preemption, and Circular Wait (Coffman's conditions). If preemption IS allowed, deadlock cannot occur because the OS can forcibly reclaim resources."
+    },
+    {
+      text: "A process is in the 'Waiting' state. Which of the following events can bring it back to the 'Ready' state?",
+      diff: "easy",
+      options: [
+        "The CPU scheduler selects it",
+        "An I/O operation it was waiting for completes",
+        "A timer interrupt occurs",
+        "The process calls exit()"
+      ],
+      correct: 1,
+      explanation: "The correct answer is <strong>I/O completion</strong>. A process enters the 'Waiting' (Blocked) state when it needs I/O. When the I/O operation completes (signaled by an interrupt), the OS moves the process back to the 'Ready' queue — it's ready to run but must wait for the scheduler to give it CPU time."
+    },
+    {
+      text: "Which CPU scheduling algorithm can suffer from 'Belady's Anomaly'?",
+      diff: "med",
+      options: [
+        "LRU Page Replacement",
+        "FIFO Page Replacement",
+        "Optimal Page Replacement",
+        "Both LRU and Optimal"
+      ],
+      correct: 1,
+      explanation: "The correct answer is <strong>FIFO Page Replacement</strong>. Belady's Anomaly is the counter-intuitive phenomenon where increasing the number of page frames can actually <em>increase</em> the number of page faults. FIFO is a classic example. LRU and Optimal are 'stack algorithms' — they are guaranteed to produce fewer or equal page faults with more frames (they never exhibit Belady's Anomaly)."
+    },
+    {
+      text: "In the Banker's Algorithm, a 'safe state' means:",
+      diff: "med",
+      options: [
+        "All processes are currently running",
+        "There exists a safe sequence in which every process can complete",
+        "No process is currently holding any resource",
+        "The system has enough resources to satisfy all maximum demands immediately"
+      ],
+      correct: 1,
+      explanation: "A <strong>safe state</strong> means there exists at least one <em>safe sequence</em> — an ordering of all processes such that each process can obtain its maximum resource needs using currently available resources plus resources released by preceding processes in the sequence. It does NOT mean all resources are available right now; it means we can guarantee everyone will eventually finish."
+    },
+    {
+      text: "What is the main purpose of the Translation Lookaside Buffer (TLB)?",
+      diff: "med",
+      options: [
+        "To store recently used disk blocks",
+        "To cache recent page table entries for faster address translation",
+        "To implement virtual memory on disk",
+        "To prevent page faults"
+      ],
+      correct: 1,
+      explanation: "The <strong>TLB</strong> is a small, fast hardware cache that stores recent page-number-to-frame-number mappings. Without TLB, every memory access requires two memory reads: one to the page table (to find the frame), and one to the actual data. With TLB, a 'hit' reduces this to just one memory access, dramatically improving performance. TLB hit rates are typically 95-99%."
+    },
+    {
+      text: "Process P1 needs resources in the order A, then B. Process P2 needs them in the order B, then A. Both request their first resource. What situation arises?",
+      diff: "med",
+      options: [
+        "Starvation",
+        "Race Condition",
+        "Deadlock",
+        "Thrashing"
+      ],
+      correct: 2,
+      explanation: "This is a classic <strong>Deadlock</strong> scenario! P1 holds A and waits for B. P2 holds B and waits for A. Neither can proceed — all four Coffman conditions are met: mutual exclusion (exclusive resource use), hold and wait (each holds one and waits for the other), no preemption (neither releases willingly), and circular wait (P1 → B → P2 → A → P1). The solution is to impose a consistent resource ordering."
+    },
+    {
+      text: "Which of the following statements about threads vs processes is CORRECT?",
+      diff: "easy",
+      options: [
+        "Threads have separate address spaces; processes share address space",
+        "Threads share code, data, and heap with their process; processes have separate address spaces",
+        "Creating a thread is more expensive than creating a process",
+        "A crash in one thread cannot affect other threads"
+      ],
+      correct: 1,
+      explanation: "The correct statement is that <strong>threads share code, data, and heap</strong> within their parent process, while processes have completely separate address spaces. This sharing makes thread creation much faster (lower overhead) than process creation. However, this sharing is also a risk — a bug in one thread (like a wild pointer) can corrupt memory used by other threads in the same process."
+    },
+    {
+      text: "In Round Robin scheduling with a time quantum of 4ms, a process with a burst time of 10ms arrives at t=0. Assuming it's the only process, when does it complete?",
+      diff: "hard",
+      options: [
+        "t = 4ms",
+        "t = 8ms",
+        "t = 10ms",
+        "t = 12ms"
+      ],
+      correct: 2,
+      explanation: "With only one process, Round Robin degrades to simple FCFS-like execution. At t=0, the process gets the CPU and runs for 4ms (quantum). Remaining = 6ms. Since it's the only process, it immediately gets the CPU again, runs 4ms more. Remaining = 2ms. Gets CPU again, runs the final 2ms. Total time = 4 + 4 + 2 = <strong>10ms</strong>, completing at t=10ms. With multiple processes, the waiting in between would have increased turnaround time."
+    },
+    {
+      text: "A file system uses indexed allocation with a block size of 512 bytes. An inode has 10 direct pointers, 1 single indirect pointer, and 1 double indirect pointer. If a block pointer is 4 bytes, what is the maximum file size?",
+      diff: "hard",
+      options: [
+        "(10 + 128 + 128²) × 512 bytes",
+        "(10 + 512 + 512²) × 512 bytes",
+        "10 × 512 bytes",
+        "(10 + 128 + 128 × 128) × 512 bytes"
+      ],
+      correct: 3,
+      explanation: "One block can hold 512/4 = <strong>128</strong> pointers. Direct: 10 blocks. Single indirect: 1 block of pointers → 128 blocks. Double indirect: 1 block of pointers → each pointing to 128 blocks → 128 × 128 = 16,384 blocks. Total = (10 + 128 + 128×128) × 512 bytes = (10 + 128 + 16384) × 512 = 16,522 × 512 ≈ <strong>8.26 MB</strong>. This matches option D: (10 + 128 + 128 × 128) × 512."
+    },
+    {
+      text: "What is 'thrashing' in the context of virtual memory?",
+      diff: "med",
+      options: [
+        "A process accessing memory outside its bounds",
+        "The CPU spending more time on page fault handling than actual execution",
+        "Two processes writing to the same memory location simultaneously",
+        "A disk arm moving excessively between tracks"
+      ],
+      correct: 1,
+      explanation: "<strong>Thrashing</strong> occurs when a process (or the entire system) has too little physical memory relative to its working set — the set of pages actively being used. The system constantly page-faults, swapping pages in and out. CPU utilization collapses because the CPU is mostly idle, waiting for I/O during page swaps. The fix is to reduce the number of active processes (so each gets more frames) or simply add more RAM."
+    }
+  ];
+
+  let answers = new Array(questions.length).fill(null);
+  let score = 0;
+  let answeredCount = 0;
+
+  function buildQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+    answers = new Array(questions.length).fill(null);
+    score = 0;
+    answeredCount = 0;
+    updateLiveScore();
+
+    questions.forEach((q, qi) => {
+      const diffClass = q.diff === 'easy' ? 'diff-easy' : q.diff === 'med' ? 'diff-med' : 'diff-hard';
+      const diffLabel = q.diff === 'easy' ? 'Basic' : q.diff === 'med' ? 'Intermediate' : 'Advanced';
+
+      let optionsHTML = q.options.map((opt, oi) => `
+        <button class="option" onclick="answerQ(${qi}, ${oi})" id="opt-${qi}-${oi}">
+          <span class="opt-letter">${String.fromCharCode(65+oi)}.</span>
+          <span>${opt}</span>
+        </button>
+      `).join('');
+
+      container.innerHTML += `
+        <div class="quiz-question" id="qq-${qi}">
+          <div class="q-header">
+            <div class="q-num">${qi+1}</div>
+            <div class="q-text">${q.text} <span class="q-diff ${diffClass}">${diffLabel}</span></div>
+          </div>
+          <div class="options">${optionsHTML}</div>
+          <div class="explanation" id="exp-${qi}">
+            <strong>📖 Explanation:</strong> ${q.explanation}
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  function answerQ(qi, oi) {
+    if (answers[qi] !== null) return;
+    answers[qi] = oi;
+    answeredCount++;
+
+    const correct = questions[qi].correct;
+    const isRight = oi === correct;
+    if (isRight) score++;
+
+    // Style options
+    for (let i = 0; i < questions[qi].options.length; i++) {
+      const btn = document.getElementById(`opt-${qi}-${i}`);
+      btn.disabled = true;
+      if (i === correct) btn.classList.add('correct');
+      else if (i === oi && !isRight) btn.classList.add('wrong');
+    }
+
+    // Show explanation
+    document.getElementById(`exp-${qi}`).classList.add('show');
+    document.getElementById(`qq-${qi}`).classList.add('answered');
+
+    updateLiveScore();
+
+    if (answeredCount === questions.length) showFinalScore();
+  }
+
+  function updateLiveScore() {
+    document.getElementById('live-score').textContent = score;
+    document.getElementById('live-total').textContent = answeredCount;
+  }
+
+  function showFinalScore() {
+    const fs = document.getElementById('final-score');
+    fs.style.display = 'block';
+    document.getElementById('score-fraction').textContent = `${score}/10`;
+    const msgs = [
+      [0,3,"Don't worry — this was your first day! Review the notes and try again. You'll get it! 🌱"],
+      [4,5,"Good start! You've grasped some core concepts. A second read-through will solidify everything. 📚"],
+      [6,7,"Solid performance! You clearly understand the fundamentals. Keep going! 💪"],
+      [8,9,"Excellent! You've absorbed most of this material really well. You're on your way! 🌟"],
+      [10,10,"Perfect score! Outstanding work — you've truly mastered Day 1 of Operating Systems! 🏆"]
+    ];
+    const msg = msgs.find(([lo, hi]) => score >= lo && score <= hi);
+    document.getElementById('score-message').textContent = msg[2];
+    fs.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function resetQuiz() {
+    document.getElementById('final-score').style.display = 'none';
+    buildQuiz();
+    document.getElementById('quiz').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  buildQuiz();
+</script>
+</body>
+</html>
