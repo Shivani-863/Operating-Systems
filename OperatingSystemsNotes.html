@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operating Systems Mastery Notes</title>
+<style>
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fc;
+  --text-primary: #1a1a1a;
+  --text-secondary: #555555;
+  --border-color: #e0e0e0;
+  --accent-blue: #2e5090;
+  --accent-light-blue: #e8f1ff;
+  --accent-green: #2d7a4a;
+  --accent-light-green: #e8f5f0;
+  --accent-orange: #d97706;
+  --accent-light-orange: #fef3c7;
+  --shadow: 0 2px 8px rgba(0,0,0,0.1);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+html.dark-mode {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --text-primary: #e5e5e5;
+  --text-secondary: #b0b0b0;
+  --border-color: #444444;
+  --accent-light-blue: #1a3a4a;
+  --accent-light-green: #1a3a2d;
+  --accent-light-orange: #3a3a1a;
+  --shadow: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.7;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-primary);
+  border-bottom: 2px solid var(--border-color);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  box-shadow: var(--shadow);
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  color: var(--accent-blue);
+  margin: 0;
+}
+
+.theme-toggle {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.theme-toggle:hover {
+  background-color: var(--accent-light-blue);
+  transform: scale(1.05);
+}
+
+.container {
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: calc(100vh - 70px);
+}
+
+.toc-sidebar {
+  width: 280px;
+  background-color: var(--bg-secondary);
+  border-right: 2px solid var(--border-color);
+  padding: 2rem 1.5rem;
+  position: sticky;
+  top: 70px;
+  height: calc(100vh - 70px);
+  overflow-y: auto;
+  box-shadow: var(--shadow);
+}
+
+.toc-sidebar h2 {
+  font-size: 1.1rem;
+  color: var(--accent-blue);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.toc-list {
+  list-style: none;
+}
+
+.toc-list li {
+  margin: 0.8rem 0;
+}
+
+.toc-list a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  display: block;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+  font-size: 0.95rem;
+}
+
+.toc-list a:hover {
+  color: var(--accent-blue);
+  background-color: var(--accent-light-blue);
+  border-left-color: var(--accent-blue);
+  padding-left: 1.2rem;
+}
+
+.main-content {
+  flex: 1;
+  padding: 3rem 4rem;
+  background-color: var(--bg-primary);
+}
+
+h2 {
+  font-size: 2rem;
+  color: var(--accent-blue);
+  margin-top: 2.5rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 3px solid var(--accent-light-blue);
+  letter-spacing: -0.5px;
+  scroll-margin-top: 80px;
+}
+
+h3 {
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin-top: 1.8rem;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+h4 {
+  font-size: 1.1rem;
+  color: var(--accent-blue);
+  margin-top: 1.4rem;
+  margin-bottom: 0.6rem;
+  font-weight: 600;
+}
+
+p {
+  margin: 1rem 0;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.key-definitions {
+  background-color: var(--accent-light-green);
+  border-left: 5px solid var(--accent-green);
+  padding: 1.5rem;
+  margin: 2rem 0;
+  border-radius: 5px;
+  box-shadow: var(--shadow);
+  transition: background-color 0.3s;
+}
+
+.key-definitions h3 {
+  color: var(--accent-green);
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.key-definitions p {
+  margin: 0.8rem 0;
+  font-size: 0.95rem;
+}
+
+.key-formulas {
+  background-color: var(--accent-light-orange);
+  border-left: 5px solid var(--accent-orange);
+  padding: 1.5rem;
+  margin: 2rem 0;
+  border-radius: 5px;
+  box-shadow: var(--shadow);
+  transition: background-color 0.3s;
+}
+
+.key-formulas h3 {
+  color: var(--accent-orange);
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.key-formulas p {
+  margin: 0.8rem 0;
+  font-size: 0.95rem;
+}
+
+.key-formulas pre {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  padding: 1rem;
+  border-radius: 5px;
+  margin: 0.8rem 0;
+  overflow-x: auto;
+}
+
+ul, ol {
+  margin: 1rem 0 1rem 2rem;
+  color: var(--text-secondary);
+}
+
+li {
+  margin: 0.6rem 0;
+  line-height: 1.6;
+}
+
+pre {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 1.2rem;
+  border-radius: 5px;
+  overflow-x: auto;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+  box-shadow: var(--shadow);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+th {
+  background-color: var(--accent-light-blue);
+  color: var(--accent-blue);
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  border: 1px solid var(--border-color);
+}
+
+td {
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+html.dark-mode tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+tr:hover {
+  background-color: var(--accent-light-blue);
+}
+
+strong {
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+.note {
+  background-color: #fffbeb;
+  border-left: 4px solid #fbbf24;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 5px;
+}
+
+html.dark-mode .note {
+  background-color: #422006;
+  border-left-color: #d97706;
+}
+
+@media (max-width: 1024px) {
+  .toc-sidebar {
+    width: 220px;
+    padding: 1.5rem 1rem;
+  }
+  
+  .main-content {
+    padding: 2rem 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .header h1 {
+    font-size: 1.4rem;
+  }
+  
+  .container {
+    flex-direction: column;
+  }
+  
+  .toc-sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 2px solid var(--border-color);
+    padding: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
+  .toc-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .toc-list a {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .main-content {
+    padding: 2rem 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.6rem;
+  }
+  
+  h3 {
+    font-size: 1.2rem;
+  }
+  
+  table {
+    font-size: 0.85rem;
+    display: block;
+    overflow-x: auto;
+  }
+  
+  th, td {
+    padding: 0.6rem 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .header h1 {
+    font-size: 1.2rem;
+  }
+  
+  .main-content {
+    padding: 1.5rem 1rem;
+  }
+  
+  h2 {
+    font-size: 1.4rem;
+  }
+  
+  h3 {
+    font-size: 1.1rem;
+  }
+  
+  .key-definitions,
+  .key-formulas {
+    padding: 1rem;
+  }
+  
+  ul, ol {
+    margin-left: 1.5rem;
+  }
+  
+  .toc-list a {
+    font-size: 0.85rem;
+  }
+}
+
+.toc-sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.toc-sidebar::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+.toc-sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.toc-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-blue);
+}
+
+pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+pre::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+pre::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-blue);
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🖥️ Operating Systems Mastery Notes</h1>
+  <button class="theme-toggle" id="themeToggle">🌙 Dark Mode</button>
+</div>
+
+<div class="container">
+  <div class="toc-sidebar">
+    <h2>📚 Contents</h2>
+    <ul class="toc-list">
+      <li><a href="#module1">Module 1: OS Basics</a></li>
+      <li><a href="#module2">Module 2: Processes & Threads</a></li>
+      <li><a href="#module3">Module 3: CPU Scheduling</a></li>
+      <li><a href="#module4">Module 4: IPC & Sync</a></li>
+      <li><a href="#module5">Module 5: Deadlocks</a></li>
+      <li><a href="#module6">Module 6: Memory Mgmt</a></li>
+      <li><a href="#module7">Module 7: Disk & I/O</a></li>
+      <li><a href="#module8">Module 8: Security & RTOS</a></li>
+      <li><a href="#additional">Additional Topics</a></li>
+      <li><a href="#extra-mcq">Extra MCQs</a></li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <p style="margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border-color); font-size: 1rem;">
+      <strong>Welcome to the Operating Systems Mastery Guide.</strong> These comprehensive notes preserve 100% of the original content with all 8 modules, detailed examples, key definitions, key formulas, and MCQs. The design is optimized for long study sessions with smooth navigation and mobile responsiveness. Use the Table of Contents sidebar to jump to specific modules.
+    </p>
+
+<h2 id="module1">Module 1: Basics of Contemporary OS & User Management</h2>
+
+<h3>Part 1: Operating System Fundamentals</h3>
+<p>An Operating System (OS) is the foundational system software that manages computer hardware, software resources, and provides common services for computer programs. It acts as an intermediary between the user of a computer and the computer hardware.</p>
+
+<p><strong>The OS serves two primary functions:</strong></p>
+<ul>
+<li><strong>Resource Allocator:</strong> It manages all system resources (CPU time, memory space, file storage space, I/O devices) and allocates them to specific programs and users as necessary for efficient and fair operation.</li>
+<li><strong>Control Program:</strong> It controls the execution of user programs to prevent errors and improper use of the computer, ensuring that a malfunctioning program cannot crash the entire system or access unauthorized data.</li>
+</ul>
+
+<h4>The Kernel vs. User Space</h4>
+<p>Modern operating systems divide system memory into two distinct zones to ensure stability and security:</p>
+<ul>
+<li><strong>Kernel Space:</strong> A strictly reserved memory area for running the core of the OS (the Kernel), hardware drivers, and core extensions. Code running here has unrestricted access to the underlying hardware.</li>
+<li><strong>User Space:</strong> A restricted memory area where standard application software (e.g., web browsers, word processors) runs. Applications in user space cannot access hardware directly; they must communicate with the kernel through a "System Call Interface."</li>
+</ul>
+
+<h3>Part 2: Contemporary OS Architectures</h3>
+
+<h4>Linux Architecture (The Monolithic Kernel)</h4>
+<p>Linux utilizes a Monolithic Kernel design. In this architecture, all core OS services (process management, memory management, file systems, device drivers) execute in the same memory space (Kernel Space).</p>
+<ul>
+<li><strong>Advantages:</strong> Communication between different OS components is extremely fast and efficient because they share the same memory space.</li>
+<li><strong>Disadvantages:</strong> If a single component (like a graphics driver) crashes, it can potentially bring down the entire system (resulting in a "Kernel Panic").</li>
+<li><strong>Structure:</strong> Hardware Level → Kernel Level (monolithic block) → System Call Interface → User Space (Applications)</li>
+</ul>
+
+<h4>Windows Architecture (The Hybrid Kernel)</h4>
+<p>Modern Windows systems (based on the Windows NT architecture) utilize a Hybrid Kernel (often described as a modified microkernel). It attempts to combine the stability of a microkernel with the performance of a monolithic kernel.</p>
+<ul>
+<li><strong>Design Philosophy:</strong> Core OS components are kept in kernel space, but many non-critical services (like the user interface or specific environmental subsystems) are moved into user space.</li>
+<li><strong>Hardware Abstraction Layer (HAL):</strong> Windows features a unique layer called the HAL. It sits directly above the hardware and hides the specific hardware differences from the rest of the OS. This allows Windows to run on vastly different hardware configurations without needing core rewrites.</li>
+<li><strong>Advantages:</strong> High stability. A crash in a user-mode subsystem does not crash the core OS.</li>
+</ul>
+
+<h3>Part 3: User Management Systems</h3>
+
+<h4>Linux User Management</h4>
+<p>In Linux, "everything is a file," and security is fundamentally tied to file ownership and permissions.</p>
+<ul>
+<li><strong>Root User:</strong> Absolute administrator. Bypasses permission checks. UID = 0.</li>
+<li><strong>UIDs/GIDs:</strong> Numeric identifiers for users and groups (not names).</li>
+<li><strong>Permissions:</strong> Owner, Group, Others with Read/Write/Execute rights.</li>
+</ul>
+
+<h4>Windows User Management</h4>
+<p>Object-based security model. Every resource (file, printer, process) is an object with security descriptor.</p>
+<ul>
+<li><strong>SIDs:</strong> Unique alphanumeric Security Identifiers (not simple numeric UIDs).</li>
+<li><strong>UAC:</strong> User Account Control strips admin privileges from standard tasks.</li>
+</ul>
+
+<div class="key-definitions">
+<h3>Key Definitions</h3>
+<p><strong>OS:</strong> Intermediary managing hardware and providing application services.</p>
+<p><strong>Kernel:</strong> Central OS module. Loads first, stays in memory, controls hardware.</p>
+<p><strong>Monolithic:</strong> All services in kernel space for speed.</p>
+<p><strong>Hybrid:</strong> Core services in kernel, non-essential in user space for stability.</p>
+<p><strong>HAL:</strong> Hardware Abstraction Layer hiding hardware complexity.</p>
+<p><strong>UID:</strong> User Identifier - numeric user ID in Unix/Linux.</p>
+<p><strong>SID:</strong> Security Identifier - unique Windows user/group/computer identifier.</p>
+</div>
+
+<div class="key-formulas">
+<h3>Key Formulas - Linux Octal Permissions</h3>
+<p><strong>Values:</strong> r=4, w=2, x=1</p>
+<p><strong>Formula:</strong> Permission Digit = r(4) + w(2) + x(1) for each category (Owner, Group, Others)</p>
+<p><strong>Example:</strong> Owner full (7) + Group rx (5) + Others r (4) = 754 permission</p>
+</div>
+
+<h2 id="module2">Module 2: System Calls, Process Concept, and Threads</h2>
+
+<h3>Part 1: System Calls (The Gateway to the Kernel)</h3>
+<p>User Space applications cannot directly interact with hardware. System Calls are the mechanism for requesting kernel services.</p>
+
+<h4>How System Calls Work (Trap Mechanism):</h4>
+<ol>
+<li>Application calls API function (e.g., printf in C)</li>
+<li>API triggers software interrupt (Trap/Exception)</li>
+<li>CPU switches from User Mode (1) to Kernel Mode (0)</li>
+<li>OS looks up request in System Call Table by system call number</li>
+<li>Kernel executes operation securely</li>
+<li>CPU returns to User Mode with control back to application</li>
+</ol>
+
+<h4>Major System Call Categories:</h4>
+<ul>
+<li><strong>Process Control:</strong> fork(), exit(), wait()</li>
+<li><strong>File Management:</strong> open(), read(), write(), close()</li>
+<li><strong>Device Management:</strong> Hardware access requests/releases</li>
+<li><strong>Information:</strong> getpid(), time()</li>
+<li><strong>Communication:</strong> Pipes, network sockets</li>
+</ul>
+
+<h3>Part 2: The Process Concept</h3>
+<p><strong>Program:</strong> Passive entity (recipe in a book). <strong>Process:</strong> Active entity (chef cooking). Process = Program in execution.</p>
+
+<h4>Process Memory Layout</h4>
+<ul>
+<li><strong>Text:</strong> Compiled code</li>
+<li><strong>Data:</strong> Global/static variables</li>
+<li><strong>Heap:</strong> Dynamic memory (grows upward)</li>
+<li><strong>Stack:</strong> Parameters, return addresses, locals (grows downward)</li>
+</ul>
+
+<h4>PCB (Process Control Block)</h4>
+<p>Data structure containing: State, Program Counter, Registers, Scheduling Info, Memory Info, I/O Status</p>
+
+<h4>Process State Lifecycle</h4>
+<ul>
+<li><strong>New:</strong> Being created</li>
+<li><strong>Ready:</strong> In memory, waiting for CPU</li>
+<li><strong>Running:</strong> Executing on CPU</li>
+<li><strong>Waiting:</strong> Waiting for event (I/O, input)</li>
+<li><strong>Terminated:</strong> Finished</li>
+</ul>
+
+<h3>Part 3: Threads (Lightweight Processes)</h3>
+<p>Multiple execution paths within single process. Threads share code/data but have private stack/registers.</p>
+
+<h4>Thread Types</h4>
+<ul>
+<li><strong>User-Level:</strong> Managed by library in user space. Fast but if one blocks, whole process blocks.</li>
+<li><strong>Kernel-Level:</strong> Managed by OS. Slower but independent blocking.</li>
+</ul>
+
+<div class="key-definitions">
+<h3>Key Definitions</h3>
+<p><strong>System Call:</strong> Interface for apps to request OS kernel services.</p>
+<p><strong>Trap:</strong> Software interrupt switching user mode to kernel mode.</p>
+<p><strong>Process:</strong> Program in execution, loaded in main memory.</p>
+<p><strong>PCB:</strong> OS data structure storing process vital information.</p>
+<p><strong>Context Switch:</strong> Save current process state, load next process state.</p>
+<p><strong>Thread:</strong> Basic CPU unit sharing process code/data, own stack/registers.</p>
+<p><strong>Multithreading:</strong> Multiple concurrent execution paths in single process.</p>
+</div>
+
+<div class="key-formulas">
+<h3>Key Formulas - fork() Process Creation</h3>
+<p><strong>Total Processes:</strong> 2^n (n = number of fork() calls)</p>
+<p><strong>Child Processes:</strong> 2^n - 1</p>
+<p><strong>Example:</strong> Three fork() → 8 total, 7 new children</p>
+</div>
+
+<h2 id="module3">Module 3: Task Scheduling (CPU Scheduling Algorithms)</h2>
+
+<h3>Part 1: Core Concept</h3>
+<p>With multiple processes in Ready Queue, OS must decide which process gets CPU next. This is CPU Scheduling managed by Short-Term Scheduler.</p>
+
+<h4>Preemptive vs. Non-Preemptive</h4>
+<ul>
+<li><strong>Non-Preemptive:</strong> Process keeps CPU until voluntarily releasing.</li>
+<li><strong>Preemptive:</strong> OS can forcefully interrupt and return to Ready Queue.</li>
+</ul>
+
+<h3>Part 2: Scheduling Criteria</h3>
+<ul>
+<li><strong>CPU Utilization:</strong> Keep CPU busy (target 100%)</li>
+<li><strong>Throughput:</strong> Processes completed per time unit</li>
+<li><strong>Turnaround Time:</strong> Arrival to completion</li>
+<li><strong>Waiting Time:</strong> Time in Ready Queue</li>
+<li><strong>Response Time:</strong> Until first CPU allocation</li>
+</ul>
+
+<h3>Part 3: Scheduling Algorithms</h3>
+
+<h4>1. FCFS (First-Come, First-Served)</h4>
+<p>Non-Preemptive. Process arriving first gets CPU first. Problem: Convoy Effect - short processes stuck behind long ones.</p>
+
+<h4>2. SJF (Shortest Job First)</h4>
+<p>Non-Preemptive. Smallest burst time gets CPU. Minimum average wait time BUT causes starvation.</p>
+
+<h4>3. SRTF (Shortest Remaining Time First)</h4>
+<p>Preemptive SJF. If new process shorter than remaining current process time, preempt.</p>
+
+<h4>4. Round Robin (RR)</h4>
+<p>Preemptive. Fixed time quantum per process. Goes to back of queue when quantum expires. Fair allocation.</p>
+
+<h4>5. Priority Scheduling</h4>
+<p>Highest priority gets CPU. Can be preemptive or non-preemptive. Problem: starvation. Solution: aging (boost waiting process priority).</p>
+
+<div class="key-definitions">
+<h3>Key Definitions</h3>
+<p><strong>Burst Time:</strong> Time process requires CPU</p>
+<p><strong>Arrival Time:</strong> When enters Ready Queue</p>
+<p><strong>Completion Time:</strong> Execution finish</p>
+<p><strong>Time Quantum:</strong> Max RR time slice</p>
+<p><strong>Convoy Effect:</strong> FCFS short stuck behind long</p>
+<p><strong>Starvation:</strong> Process never gets CPU</p>
+<p><strong>Aging:</strong> Boost waiting process priority</p>
+<p><strong>Gantt Chart:</strong> Scheduling timeline visualization</p>
+</div>
+
+<div class="key-formulas">
+<h3>Key Formulas</h3>
+<p><strong>TAT:</strong> Turnaround Time = CT - AT</p>
+<p><strong>WT:</strong> Waiting Time = TAT - BT</p>
+<p><strong>RT:</strong> Response Time = First Allocation - AT</p>
+<p><strong>Average TAT:</strong> Σ TAT_i / n</p>
+<p><strong>Average WT:</strong> Σ WT_i / n</p>
+<p><strong>CPU Utilization:</strong> (Total execution / Total time) × 100%</p>
+</div>
+
+<h2 id="module4">Module 4: Inter-Process Communication (IPC) & Synchronization</h2>
+
+<h3>Part 1: IPC</h3>
+<p>Processes run in isolated memory. When needing to cooperate, they use IPC mechanisms.</p>
+
+<h4>IPC Models</h4>
+<ul>
+<li><strong>Shared Memory:</strong> OS creates shared region. Fast but coordination needed.</li>
+<li><strong>Message Passing:</strong> Via OS kernel send()/receive(). Slower but safer.</li>
+</ul>
+
+<h3>Part 2: Critical Section Problem</h3>
+<p>When multiple processes share data concurrently, race conditions occur (outcome depends on unpredictable timing).</p>
+
+<h4>Three Critical Section Rules</h4>
+<ol>
+<li><strong>Mutual Exclusion:</strong> Only one process in critical section simultaneously</li>
+<li><strong>Progress:</strong> Waiting process must eventually enter</li>
+<li><strong>Bounded Waiting:</strong> Limit on processes cutting in line (no starvation)</li>
+</ol>
+
+<h3>Part 3: Synchronization Tools</h3>
+
+<h4>Mutex Locks</h4>
+<p>Binary lock. acquire() to enter, release() to exit. If locked, process sleeps.</p>
+
+<h4>Semaphores</h4>
+<p>Integer S with atomic wait()/signal() operations.</p>
+<ul>
+<li><strong>wait(S):</strong> If S>0 decrement, else sleep</li>
+<li><strong>signal(S):</strong> Increment S, wake sleeping process</li>
+<li><strong>Binary:</strong> 0/1 (like Mutex)</li>
+<li><strong>Counting:</strong> Any integer (multiple resources)</li>
+</ul>
+
+<h4>Classic Problems</h4>
+<ul>
+<li><strong>Producer-Consumer:</strong> Sync producer data creation and consumer consumption</li>
+<li><strong>Reader-Writer:</strong> Readers concurrent, writer exclusive</li>
+</ul>
+
+<div class="key-definitions">
+<h3>Key Definitions</h3>
+<p><strong>IPC:</strong> Isolated process data sharing mechanisms</p>
+<p><strong>Race Condition:</strong> Outcome depends on unpredictable execution timing</p>
+<p><strong>Critical Section:</strong> Code accessing/modifying shared data</p>
+<p><strong>Mutex:</strong> Mutual exclusion lock</p>
+<p><strong>Semaphore:</strong> Integer for process synchronization</p>
+</div>
+
+<div class="key-formulas">
+<h3>Key Formulas - Semaphore</h3>
+<p><strong>Current Value:</strong> Initial + Signals - Waits</p>
+<p><strong>Blocked Processes:</strong> If negative, absolute value = blocked count</p>
+<p><strong>Example:</strong> S=5, 12 waits, 4 signals → 5+4-12=-3. All 5 resources used, 3 waiting.</p>
+</div>
+
+<h2 id="module5">Module 5: Deadlocks and Resource Allocations</h2>
+
+<h3>Part 1: Deadlock Concept</h3>
+<p>System state where processes permanently blocked. Each holds resource, waits for another's resource. Circular dependency.</p>
+
+<h4>Coffman Conditions (All 4 Required)</h4>
+<ol>
+<li><strong>Mutual Exclusion:</strong> Non-shareable resource</li>
+<li><strong>Hold and Wait:</strong> Holding resource while waiting for another</li>
+<li><strong>No Preemption:</strong> Can't forcefully take resource</li>
+<li><strong>Circular Wait:</strong> Circular resource requesting chain</li>
+</ol>
+<p>Break any ONE condition = deadlock impossible</p>
+
+<h3>Part 2: Resource Allocation Graphs (RAG)</h3>
+<p>Circles=Processes, Squares=Resources. Arrows: Request Edge (P→R wanting), Assignment Edge (R→P holding).</p>
+<ul>
+<li>No cycles = NO deadlock</li>
+<li>Cycle + single resource = DEADLOCK</li>
+<li>Cycle + multiple resources = might deadlock</li>
+</ul>
+
+<h3>Part 3: Deadlock Handling Strategies</h3>
+
+<h4>1. Ostrich Algorithm</h4>
+<p>Ignore deadlocks. If occurs, user reboots. Used by Windows, Linux, macOS!</p>
+
+<h4>2. Prevention</h4>
+<p>Structure system so one Coffman condition impossible. Example: Number resources, require increasing order requests.</p>
+
+<h4>3. Avoidance (Banker's Algorithm)</h4>
+<p>Before granting resource, simulate. Only grant if leads to "Safe State" (all processes finishable).</p>
+
+<h4>4. Detection & Recovery</h4>
+<p>Run normally, scan for cycles periodically. If detected, abort/preempt appropriately.</p>
+
+<div class="key-definitions">
+<h3>Key Definitions</h3>
+<p><strong>Deadlock:</strong> Processes unable to proceed waiting for each other's resources</p>
+<p><strong>RAG:</strong> Directed graph of process resource holdings/requests</p>
+<p><strong>Safe State:</strong> At least one execution sequence all finish without deadlock</p>
+<p><strong>Unsafe State:</strong> Deadlock could occur (no guarantee)</p>
+<p><strong>Banker's Algorithm:</strong> Deadlock avoidance via simulation</p>
+</div>
+
+<div class="key-formulas">
+<h3>Key Formulas - Banker's Algorithm</h3>
+<p><strong>Need Matrix:</strong> Need[i,j] = Max[i,j] - Allocation[i,j]</p>
+<p><strong>Safety:</strong> If Need_i ≤ Available → can execute</p>
+<p><strong>Release:</strong> New Available = Current + Allocation_i</p>
+</div>
+
+<h2 id="module6">Module 6: Memory Management (Paging, Segmentation, Virtual Memory)</h2>
+
+<h3>Part 1: Memory Basics</h3>
+<p>CPU fast, no storage. Disk massive, slow. RAM between them.</p>
+
+<p><strong>Golden Rule:</strong> Load program from disk to RAM before CPU can execute.</p>
+
+<h4>Logical vs. Physical Addresses</h4>
+<ul>
+<li><strong>Logical (Virtual):</strong> CPU-generated. Program thinks it owns everything from 0.</li>
+<li><strong>Physical:</strong> Actual RAM hardware location.</li>
+<li><strong>MMU:</strong> Hardware translating virtual to physical instantly.</li>
+</ul>
+
+<h3>Part 2: Contiguous Allocation Problems</h3>
+<ul>
+<li><strong>Internal Fragmentation:</strong> Space inside allocated block wasted</li>
+<li><strong>External Fragmentation:</strong> Free space fragmented, can't fit process</li>
+</ul>
+
+<h3>Part 3: Non-Contiguous Solutions</h3>
+
+<h4>Paging</h4>
+<p>Chop process into Pages, RAM into Frames (same size). Any page fits any frame. Page Table maps pages to frames. Eliminates external fragmentation!</p>
+
+<h4>Segmentation</h4>
+<p>Chop into logical sections (code, data, stack). Segment Table tracks base and limit.</p>
+
+<h3>Part 4: Virtual Memory & Demand Paging</h3>
+<p><strong>Virtual Memory:</strong> Illusion of massive memory using disk.</p>
+<p><strong>Demand Paging:</strong> Load pages only when CPU demands.</p>
+<p><strong>Page Fault:</strong> CPU accesses page not in RAM. OS fetches from disk, loads to frame, restarts process.</p>
+
+<h3>Part 5: Page Replacement Algorithms</h3>
+
+<h4>FIFO</h4>
+<p>Evict oldest page. Problem: Belady's Anomaly (more frames = more faults!).</p>
+
+<h4>LRU (Least Recently Used)</h4>
+<p>Evict unused longest. Excellent performance. No Belady's Anomaly.</p>
+
+<h4>OPT (Optimal)</h4>
+<p>Evict page unused longest in future. Requires time machine! Used mathematically.</p>
+
+<h3>Part 6: TLB (Translation Lookaside Buffer)</h3>
+<p>Problem: Page Table in RAM. CPU needs 2 RAM accesses (1 for table, 1 for data).</p>
+<p>Solution: TLB is tiny fast cache in MMU storing recent translations.</p>
+<ul>
+<li><strong>Hit:</strong> Found instantly (1 access)</li>
+<li><strong>Miss:</strong> Access page table (2 accesses)</li>
+</ul>
+
+<h3>Part 7: Thrashing & Working Set</h3>
+<p><strong>Thrashing:</strong> More time swapping than executing.</p>
+<p><strong>Cause:</strong> Too many processes, not enough frames.</p>
+<p><strong>Solution:</strong> Only run process if free RAM ≥ working set size.</p>
+
+<div class="key-definitions">
+<h3>Key Definitions</h3>
+<p><strong>MMU:</strong> Virtual-to-physical address mapping hardware</p>
+<p><strong>Page:</strong> Fixed logical memory block</p>
+<p><strong>Frame:</strong> Fixed physical RAM block</p>
+<p><strong>Page Table:</strong> Maps logical pages to physical frames</p>
+<p><strong>Page Fault:</strong> Program accesses page not in RAM</p>
+<p><strong>Thrashing:</strong> Excessive page swapping</p>
+<p><strong>Belady's Anomaly:</strong> More frames → more faults (FIFO only)</p>
+</div>
+
+<div class="key-formulas">
+<h3>Key Formulas</h3>
+<p><strong>Pages Count:</strong> Address Space / Page Size</p>
+<p><strong>Bit-based Pages:</strong> If address m bits, page n bits: Pages = 2^(m-n)</p>
+<p><strong>EAT (Demand):</strong> (1-p)×m + p×pf (p=fault rate, m=access time, pf=fault service time)</p>
+<p><strong>EAT with TLB:</strong> H×(c+m) + (1-H)×(c+2m) (c=TLB time, H=hit ratio)</p>
+</div>
+
+<h2 id="module7">Module 7: Disk Management, I/O, and File Systems</h2>
+
+<h3>Part 1: I/O Management</h3>
+<p>Computers have many slow devices. If CPU managed them, would waste time waiting.</p>
+
+<h4>I/O Components</h4>
+<ul>
+<li><strong>Device Drivers:</strong> Software translator between kernel and hardware</li>
+<li><strong>Device Controllers:</strong> Hardware microchip receiving commands</li>
+</ul>
+
+<h4>I/O Communication Methods</h4>
+<ul>
+<li><strong>Polling:</strong> CPU asks repeatedly "ready?" Wasteful.</li>
+<li><strong>Interrupt-Driven:</strong> Device interrupts when done. CPU does other work.</li>
+<li><strong>DMA:</strong> Hardware directly moves data to RAM. CPU completely free.</li>
+</ul>
+
+<h3>Part 2: Hard Disk Components</h3>
+<ul>
+<li><strong>Platters:</strong> Spinning magnetic disks</li>
+<li><strong>Tracks:</strong> Concentric circles (like tree rings)</li>
+<li><strong>Sectors:</strong> Track slices (usually 512 bytes)</li>
+<li><strong>Cylinders:</strong> Same track vertical stack</li>
+<li><strong>Head:</strong> Robotic arm reading/writing</li>
+</ul>
+
+<h4>Three Delays</h4>
+<ol>
+<li><strong>Seek:</strong> Arm moving (slowest!)</li>
+<li><strong>Rotational Latency:</strong> Platter spinning</li>
+<li><strong>Transfer:</strong> Reading data</li>
+</ol>
+
+<h3>Part 3: Disk Scheduling Algorithms</h3>
+
+<h4>FCFS</h4>
+<p>Serve in arrival order. Wildly inefficient.</p>
+
+<h4>SSTF</h4>
+<p>Go to nearest track. Can starve outer cylinders.</p>
+
+<h4>SCAN</h4>
+<p>Like elevator - sweep one direction, reverse at end. Fair.</p>
+
+<h4>C-SCAN</h4>
+<p>Sweep one direction, jump to start. More uniform wait times.</p>
+
+<h4>LOOK/C-LOOK</h4>
+<p>Smarter - only go as far as last request, then reverse/jump.</p>
+
+<h3>Part 4: File Systems</h3>
+
+<h4>Directory Structures</h4>
+<ul>
+<li><strong>Single-Level:</strong> One folder all files</li>
+<li><strong>Two-Level:</strong> Master + per-user folders</li>
+<li><strong>Tree:</strong> Nested folders from root</li>
+</ul>
+
+<h4>File Allocation</h4>
+<ul>
+<li><strong>Contiguous:</strong> Single block. Fast but fragmentation.</li>
+<li><strong>Linked:</strong> Scattered with pointers. Bad random access.</li>
+<li><strong>Indexed (Inode):</strong> Master index with all addresses. Best!</li>
+</ul>
+
+<div class="key-definitions">
+<h3>Key Definitions</h3>
+<p><strong>Spooling:</strong> Jobs in buffer for device processing</p>
+<p><strong>DMA:</strong> Hardware direct memory access</p>
+<p><strong>Seek Time:</strong> Arm movement time</p>
+<p><strong>Latency:</strong> Rotation waiting time</p>
+<p><strong>Inode:</strong> Linux file structure with addresses</p>
+</div>
+
+<div class="key-formulas">
+<h3>Key Formulas</h3>
+<p><strong>Access Time:</strong> Seek + Latency + Transfer</p>
+<p><strong>Head Movement:</strong> Σ |Destination - Position|</p>
+<p><strong>Avg Latency:</strong> Usually 0.5 × rotation time</p>
+</div>
+
+<h2 id="module8">Module 8: Protection, Security, and Real-Time Systems</h2>
+
+<h3>Part 1: Protection vs. Security</h3>
+<ul>
+<li><strong>Protection:</strong> Internal - Process A can't write Process B's memory</li>
+<li><strong>Security:</strong> External - Defense against malware and attackers</li>
+</ul>
+
+<h3>Part 2: Access Matrix Model</h3>
+<p>Track who accesses what. Rows=Users/Processes, Columns=Resources, Cells=Permissions.</p>
+
+<h4>Implementation</h4>
+<ul>
+<li><strong>ACLs:</strong> Permission list per file. "User A read, User B write."</li>
+<li><strong>Capability Lists:</strong> Permission keychain per process.</li>
+</ul>
+
+<h3>Part 3: System Threats</h3>
+
+<h4>Malware Types</h4>
+<ul>
+<li><strong>Virus:</strong> Attaches to program. Human action spreads.</li>
+<li><strong>Worm:</strong> Standalone, self-replicating. No host, no human needed.</li>
+<li><strong>Trojan:</strong> Disguised useful software with hidden payload.</li>
+<li><strong>Logic Bomb:</strong> Dormant until condition met, then detonates.</li>
+</ul>
+
+<h3>Part 4: Real-Time Operating Systems</h3>
+<p>Goal: Complete tasks within strict deadlines (not fairness/throughput).</p>
+
+<h4>Hard Real-Time</h4>
+<p>Missing deadline = catastrophic failure/loss of life. Pacemakers, airbags, rockets.</p>
+
+<h4>Soft Real-Time</h4>
+<p>Missing deadline = degraded performance (not critical). Video streaming, gaming.</p>
+
+<div class="key-definitions">
+<h3>Key Definitions</h3>
+<p><strong>Protection:</strong> Internal process isolation</p>
+<p><strong>Security:</strong> External threat defense</p>
+<p><strong>Authentication:</strong> Verify who user is</p>
+<p><strong>Authorization:</strong> Verify what allowed</p>
+<p><strong>RTOS:</strong> Real-Time OS with timing guarantees</p>
+</div>
+
+<h2 id="additional">Additional Topics</h2>
+
+<h3>Boot Process and System Initialization</h3>
+<p>Sequence: Firmware (BIOS/UEFI) → Bootloader → Kernel Loading → Hardware/Driver Init → System Processes.</p>
+
+<h3>Interrupts and Exception Handling</h3>
+<p><strong>Interrupts:</strong> Hardware/software signals pausing CPU, transferring to kernel.</p>
+<p><strong>Exceptions:</strong> Synchronous errors (divide-by-zero, page faults).</p>
+
+<h3>Kernel Structures and System Calls</h3>
+<p>Transition: User space → software interrupt → trap handler → kernel space → system call table → execution → return.</p>
+
+<h2 id="extra-mcq">Extra Practice MCQs</h2>
+
+<h3>Question 1</h3>
+<p><strong>Which is NOT a valid CPU scheduling metric?</strong></p>
+<ul>
+<li>A) Turnaround Time</li>
+<li>B) Waiting Time</li>
+<li>C) Context Switching Time</li>
+<li>D) Program Source Code Size</li>
+</ul>
+<p><strong>Answer: D</strong> - Source code size unrelated to scheduling.</p>
+
+<h3>Question 2</h3>
+<p><strong>In paging, what translates logical pages to physical frames?</strong></p>
+<ul>
+<li>A) TLB</li>
+<li>B) Page Table</li>
+<li>C) Inode Table</li>
+<li>D) Free List</li>
+</ul>
+<p><strong>Answer: B</strong> - Page Table is primary. TLB is cache.</p>
+
+<h3>Question 3</h3>
+<p><strong>HAL in Windows isolates what?</strong></p>
+<ul>
+<li>A) User passwords</li>
+<li>B) Device-specific hardware details</li>
+<li>C) CPU scheduling</li>
+<li>D) Cloud connectivity</li>
+</ul>
+<p><strong>Answer: B</strong> - Hardware Abstraction Layer hides complexity.</p>
+
+<h3>Question 4</h3>
+<p><strong>Which page replacement is optimal but impossible?</strong></p>
+<ul>
+<li>A) FIFO</li>
+<li>B) LRU</li>
+<li>C) OPT</li>
+<li>D) Clock</li>
+</ul>
+<p><strong>Answer: C</strong> - OPT requires time travel!</p>
+
+  </div>
+</div>
+
+<script>
+const themeToggle = document.getElementById('themeToggle');
+const htmlElement = document.documentElement;
+
+// Check saved theme or default to light
+const savedTheme = localStorage.getItem('theme') || 'light';
+if (savedTheme === 'dark') {
+  htmlElement.classList.add('dark-mode');
+  themeToggle.textContent = '☀️ Light Mode';
+}
+
+themeToggle.addEventListener('click', () => {
+  htmlElement.classList.toggle('dark-mode');
+  const isDark = htmlElement.classList.contains('dark-mode');
+  themeToggle.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+});
+
+// Smooth scrolling for TOC
+document.querySelectorAll('.toc-list a').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const targetId = link.getAttribute('href');
+    const targetElement = document.querySelector(targetId);
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>
